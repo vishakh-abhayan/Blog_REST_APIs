@@ -23,3 +23,16 @@ def CreatePost(request):
         return Response({'Sucess':'this post was successfully created'},status=201)
     else:
         return Response(serializer.errors,status=400)
+    
+@api_view(['DELETE'])
+def DeletePost(request):
+    post_id = request.POST.get('post_id')
+    if post_id is None or post_id:
+        return Response({'Error': 'please enter parameter is missing'}, status=400)
+    
+    try:
+        post = Post.objects.get(id=post_id)
+        post.delete()
+        return Response({'Success': 'This post was successfully deleted'}, status=200)
+    except Post.DoesNotExist:
+        return Response({'Error': 'The post does not exist'}, status=404)
